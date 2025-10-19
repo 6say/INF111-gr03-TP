@@ -33,7 +33,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     public void traiter(Evenement evenement) {
         Object source = evenement.getSource();
         Connexion cnx;
-        String msg, typeEvenement, aliasExpediteur;
+        String msg, typeEvenement, aliasExpediteur,aliasInvite;
         ServeurChat serveur = (ServeurChat) this.serveur;
 
         if (source instanceof Connexion) {
@@ -53,6 +53,13 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasExpediteur = cnx.getAlias();
                     msg = evenement.getArgument();
                     serveur.envoyerATousSauf(msg, aliasExpediteur);
+                    break;
+                case "Join":
+                    aliasExpediteur = cnx.getAlias();
+                    aliasInvite = evenement.getArgument();
+                    serveur.inviter(aliasInvite, aliasExpediteur);
+                    break;
+
 
                 //Ajoutez ici d�autres case pour g�rer d�autres commandes.
 
