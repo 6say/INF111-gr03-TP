@@ -1,22 +1,16 @@
 package com.chat.serveur;
 
-import java.net.ConnectException;
-import com.commun.net.Connexion;
-import java.sql.Connection;
 import java.util.Objects;
 
-public class Invitation extends Serveur{
+public class Invitation{
 
     private String aliasHote, aliasInvite;
 
     /**
      * Cree un serveur qui va ecouter sur le port specifie.
-     *
-     * @param port int Port d'ecoute du serveur
      */
-    public Invitation(int port, String aliasHote, String aliasInvite) {
-        //on récupère l'alias hôte, l'alias invité et le port du serveur pour l'invitation
-        super(port);
+    public Invitation(String aliasHote, String aliasInvite) {
+        //on récupère l'alias hôte, l'alias invité pour l'invitation
         this.aliasHote = aliasHote;
         this.aliasInvite = aliasInvite;
     }

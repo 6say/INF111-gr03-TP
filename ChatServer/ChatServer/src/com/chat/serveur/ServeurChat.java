@@ -2,6 +2,10 @@ package com.chat.serveur;
 
 import com.commun.net.Connexion;
 
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.Vector;
+
 /**
  * Cette classe etend (herite) la classe abstraite Serveur et y ajoute le necessaire pour que le
  * serveur soit un serveur de chat.
@@ -12,6 +16,8 @@ import com.commun.net.Connexion;
  */
 public class ServeurChat extends Serveur {
 
+    private Vector<Invitation> listInvitations; //On a un vecteur qui liste toutes les invitations qui ne sont pas encore acceptées ni déclinées
+
     /**
      * Cree un serveur de chat qui va ecouter sur le port specifie.
      *
@@ -19,6 +25,7 @@ public class ServeurChat extends Serveur {
      */
     public ServeurChat(int port) {
         super(port);
+        listInvitations = new Vector<Invitation>();
     }
 
     @Override
@@ -100,11 +107,37 @@ public class ServeurChat extends Serveur {
     public void envoyerATousSauf(String str,String aliasExpediteur){
         String s = "";
         for (Connexion cnx:connectes){
-            if (cnx.getAlias().equalsIgnoreCase(aliasExpediteur)){
-
-            }else {
+            if (!cnx.getAlias().equalsIgnoreCase(aliasExpediteur)){
                 cnx.envoyer(aliasExpediteur + " >> " + str);
             }
         }
+    }
+
+    public boolean inviter(String invite,String host){
+        boolean canInvite = true;
+        host = host.trim();
+        invite = invite.trim();
+        Invitation inv = new Invitation(host,invite);
+        for (Invitation i:listInvitations){
+            if(inv.equals(i)){
+                canInvite = false;
+            }
+            return canInvite;
+        }
+
+        if (canInvite){
+            listInvitations.add(inv);
+            for (Connexion cnx:connectes){
+                if(cnx.getAlias().equalsIgnoreCase(invite)){
+                    cnx.envoyer(host + "Vous a invité a chatter en privé");
+                }
+            }
+        }
+        return true;
+    }
+
+    public Vector<Invitation> getListInvitations() {
+        //on récupère les invitations pour pouvoir les refuser dans la classe de gestion des évènements
+        return listInvitations;
     }
 }

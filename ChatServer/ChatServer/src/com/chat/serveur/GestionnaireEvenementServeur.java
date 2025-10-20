@@ -33,8 +33,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     public void traiter(Evenement evenement) {
         Object source = evenement.getSource();
         Connexion cnx;
-        String msg, typeEvenement, aliasExpediteur;
-        String aliasInvite; //Utile pour la commande JOIN
+        String msg, typeEvenement, aliasExpediteur,aliasInvite;
         ServeurChat serveur = (ServeurChat) this.serveur;
 
         if (source instanceof Connexion) {
@@ -54,12 +53,21 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasExpediteur = cnx.getAlias();
                     msg = evenement.getArgument();
                     serveur.envoyerATousSauf(msg, aliasExpediteur);
-
-                //Ajoutez ici deautres case pour gerer deautres commandes.
-
-                case  "JOIN" : // permet de faire une requête à un utilisateur pour rejoindre un serveur privé:
-                    cnx.envoyer("Entrez l'identifiant de la personne à inviter");
+                    break;
+                case "Join":
+                    aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
+                    serveur.inviter(aliasInvite, aliasExpediteur);
+                    break;
+
+                case "DECLINE":
+                    aliasExpediteur = cnx.getAlias(); //On récupère l'alias de la personne qui décline l'invitation
+                    aliasInvite = evenement.getArgument(); //on récupère le message (donc l'alias) de la personne à qui on veut refuser l'invitation
+
+                    break;
+
+                //Ajoutez ici d'autres case pour gerer d'autres commandes.
+
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
                     cnx.envoyer(msg);
