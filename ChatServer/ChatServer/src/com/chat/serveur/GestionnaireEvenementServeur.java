@@ -54,7 +54,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     msg = evenement.getArgument();
                     serveur.envoyerATousSauf(msg, aliasExpediteur);
                     break;
-                case "Join":
+                case "JOIN":
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
                     serveur.inviter(aliasInvite, aliasExpediteur);
