@@ -199,5 +199,15 @@ public class ServeurChat extends Serveur {
         boolean quitte = false;
         SalonPrive quitterSalon = new SalonPrive(aliasHote,aliasInvite); //on crée un salon à effacer
 
+        if(listSalonPrives.remove(quitterSalon)){ // On s'Assure de pouvoir effacer le salon, si oui, on return true
 
+            Connexion cnxInvite= getConnexionParAlias(aliasInvite);
+
+            if(cnxInvite!=null){ //Si on a bel et bien encore un invité de l'autre côté du salon, on lui envoie un message pour dire que l'hôte à quitté
+                cnxInvite.envoyer("QUIT "+ aliasHote);
+            }
+            quitte = true;
+        }
+        return quitte; // Aucun invité n'a été trouvé, on ne peut pas effacer le salon
+    }
 }

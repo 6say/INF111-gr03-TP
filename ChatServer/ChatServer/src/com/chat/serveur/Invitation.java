@@ -15,6 +15,14 @@ public class Invitation {
         return aliasHote.equalsIgnoreCase(alias1) && aliasInvite.equalsIgnoreCase(alias2) ;
     }
 
+    public String getAliasHote() {
+        return aliasHote;
+    }
+
+    public String getAliasInvite() {
+        return aliasInvite;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
