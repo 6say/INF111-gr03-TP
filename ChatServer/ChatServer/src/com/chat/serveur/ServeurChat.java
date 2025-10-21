@@ -2,6 +2,7 @@ package com.chat.serveur;
 
 import com.commun.net.Connexion;
 
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Vector;
 
@@ -17,6 +18,8 @@ public class ServeurChat extends Serveur {
     //Attribut historque qui permet au serveur de se rappeler de chaque message sous forme de String dans un Vecteur
     private Vector<String> historique;
 
+    private Vector<Invitation> listInvitations;
+
     /**
      * Cr�e un serveur de chat qui va �couter sur le port sp�cifi�.
      *
@@ -24,6 +27,7 @@ public class ServeurChat extends Serveur {
      */
     public ServeurChat(int port) {
         super(port);
+        listInvitations = new Vector<Invitation>();
         historique = new Vector<String>();
     }
 
@@ -114,11 +118,34 @@ public class ServeurChat extends Serveur {
     public void envoyerATousSauf(String str,String aliasExpediteur){
         String s = "";
         for (Connexion cnx:connectes){
-            if (cnx.getAlias().equalsIgnoreCase(aliasExpediteur)){
-
-            }else {
+            if (!cnx.getAlias().equalsIgnoreCase(aliasExpediteur)){
                 cnx.envoyer(aliasExpediteur + " >> " + str);
             }
         }
     }
+
+    public boolean inviter(String invite,String host){
+        boolean canInvite = true;
+        host = host.trim();
+        invite = invite.trim();
+        Invitation inv = new Invitation(host,invite);
+        for (Invitation i:listInvitations){
+            if(inv.equals(i)){
+               canInvite = false;
+               return false;
+            }
+        }
+
+        if (canInvite){
+            listInvitations.add(inv);
+            for (Connexion cnx:connectes){
+                if(cnx.getAlias().equalsIgnoreCase(invite)){
+                    cnx.envoyer(host + "Vous a inviter a chatter en priver");
+                }
+            }
+        }
+        return true;
+    }
+
+
 }
