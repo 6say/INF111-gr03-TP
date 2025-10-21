@@ -22,4 +22,8 @@ public class SalonPrive {
     public int hashCode() {
         return Objects.hash(aliasHote, aliasInvite);
     }
+
+
+
+
 }

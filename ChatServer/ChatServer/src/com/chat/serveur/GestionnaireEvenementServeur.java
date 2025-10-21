@@ -5,10 +5,10 @@ import com.commun.evenement.GestionnaireEvenement;
 import com.commun.net.Connexion;
 
 /**
- * Cette classe repr�sente un gestionnaire d'�v�nement d'un serveur. Lorsqu'un serveur re�oit un texte d'un client,
- * il cr�e un �v�nement � partir du texte re�u et alerte ce gestionnaire qui r�agit en g�rant l'�v�nement.
+ * Cette classe represente un gestionnaire d'evenement d'un serveur. Lorsqu'un serveur reeoit un texte d'un client,
+ * il cree un evenement e partir du texte reeu et alerte ce gestionnaire qui reagit en gerant l'evenement.
  *
- * @author Abdelmoum�ne Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
+ * @author Abdelmoumene Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
  * @version 1.0
  * @since 2023-09-01
  */
@@ -16,18 +16,18 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     private Serveur serveur;
 
     /**
-     * Construit un gestionnaire d'�v�nements pour un serveur.
+     * Construit un gestionnaire d'evenements pour un serveur.
      *
-     * @param serveur Serveur Le serveur pour lequel ce gestionnaire g�re des �v�nements
+     * @param serveur Serveur Le serveur pour lequel ce gestionnaire gere des evenements
      */
     public GestionnaireEvenementServeur(Serveur serveur) {
         this.serveur = serveur;
     }
 
     /**
-     * M�thode de gestion d'�v�nements. Cette m�thode contiendra le code qui g�re les r�ponses obtenues d'un client.
+     * Methode de gestion d'evenements. Cette methode contiendra le code qui gere les reponses obtenues d'un client.
      *
-     * @param evenement L'�v�nement � g�rer.
+     * @param evenement L'evenement e gerer.
      */
     @Override
     public void traiter(Evenement evenement) {
@@ -41,7 +41,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
             System.out.println("SERVEUR-Recu : " + evenement.getType() + " " + evenement.getArgument());
             typeEvenement = evenement.getType();
             switch (typeEvenement) {
-                case "EXIT": //Ferme la connexion avec le client qui a envoy� "EXIT":
+                case "EXIT": //Ferme la connexion avec le client qui a envoye "EXIT":
                     cnx.envoyer("END");
                     serveur.enlever(cnx);
                     cnx.close();
@@ -53,18 +53,56 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasExpediteur = cnx.getAlias();
                     msg = evenement.getArgument();
                     serveur.envoyerATousSauf(msg, aliasExpediteur);
+                    serveur.ajouterHistorique(msg,aliasExpediteur);
                     break;
                 case "JOIN":
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
-                    serveur.inviter(aliasInvite, aliasExpediteur);
+                    if(serveur.getListInvitations().contains(new Invitation(aliasExpediteur, aliasInvite))){
+                        serveur.addSalonPrive(new SalonPrive(aliasExpediteur,aliasInvite));
+                        cnx.envoyer("JOINOK");
+                    }else{
+                        serveur.addInvitation(new Invitation(aliasExpediteur, aliasInvite));
+                        cnx.setAlias(aliasInvite);
+                        cnx.envoyer("JOIN");
+                    }
+
                     break;
+                //Ajoutez ici deautres case pour gerer deautres commandes.
+                case "DECLINE":
+                    aliasExpediteur = cnx.getAlias();
+                    aliasInvite = evenement.getArgument();
+                    serveur.removeInvitation(aliasInvite, aliasExpediteur);
+                    cnx.setAlias(aliasInvite);
+                    cnx.envoyer("DECLINE");
+                    break;
+                case "PRV":
+                    aliasExpediteur = cnx.getAlias();
+                    aliasInvite = evenement.getArgument();
+                    msg = evenement.getArgument();
+                    if(!serveur.getListSalonPrives().contains(new SalonPrive(aliasExpediteur,aliasInvite)))
+                        cnx.envoyer("Vous ne partagez pas un salon privée avec "+aliasInvite);
 
-
-                    serveur.ajouterHistorique(msg,aliasExpediteur);
-                //Ajoutez ici d�autres case pour g�rer d�autres commandes.
-                case "HIST":
-                    cnx.envoyer(serveur.historique());
+                    serveur.envoyerPrive(msg,aliasExpediteur,aliasInvite);
+                    break;
+                case "INV":
+                    cnx.envoyer("INV "+serveur.getListInvitations());
+                    break;
+                case "QUIT":
+//                    aliasExpediteur = cnx.getAlias();
+//                    aliasInvite = evenement.getArgument();
+//                    if(!serveur.quitterSalonPrive(aliasExpediteur, aliasInvite)) {
+//                        cnx.envoyer("Le salon n'a pas pu être effacé");
+//                        serveur.getListSalonPrives().remove(aliasInvite);
+//                    }
+//                    cnx.envoyer("QUIT : +\n +  Vous avez bien quitté le salon privé");
+                    aliasExpediteur = cnx.getAlias();
+                    aliasInvite = evenement.getArgument();
+                    if(!serveur.quitterSalonPrive(aliasExpediteur, aliasInvite)) {
+                        cnx.envoyer("Le salon n'a pas pu être effacé");
+                        //serveur.removeSalonPrive(aliasInvite);
+                    }
+                    cnx.envoyer("QUIT");
                     break;
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();

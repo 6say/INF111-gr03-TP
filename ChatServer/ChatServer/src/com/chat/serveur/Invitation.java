@@ -11,6 +11,10 @@ public class Invitation {
         this.aliasInvite = aliasInvite;
     }
 
+    public boolean contientAlias(String alias1, String alias2){
+        return aliasHote.equalsIgnoreCase(alias1) && aliasInvite.equalsIgnoreCase(alias2) ;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
