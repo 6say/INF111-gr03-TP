@@ -4,6 +4,8 @@ import com.commun.evenement.Evenement;
 import com.commun.evenement.GestionnaireEvenement;
 import com.commun.net.Connexion;
 
+import java.util.Vector;
+
 /**
  * Cette classe represente un gestionnaire d'evenement d'un serveur. Lorsqu'un serveur reeoit un texte d'un client,
  * il cree un evenement e partir du texte reeu et alerte ce gestionnaire qui reagit en gerant l'evenement.
@@ -60,11 +62,17 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasInvite = evenement.getArgument();
                     if(serveur.getListInvitations().contains(new Invitation(aliasExpediteur, aliasInvite))){
                         serveur.addSalonPrive(new SalonPrive(aliasExpediteur,aliasInvite));
-                        cnx.envoyer("JOINOK");
+                        cnx.envoyer("JOINOK " + aliasInvite );
+                        cnx = serveur.getConnexionParAlias(aliasInvite);
+                        cnx.envoyer("JOINOK " + aliasExpediteur);
                     }else{
-                        serveur.addInvitation(new Invitation(aliasExpediteur, aliasInvite));
-                        cnx.setAlias(aliasInvite);
-                        cnx.envoyer("JOIN");
+                        if(!serveur.getListInvitations().contains(new Invitation(aliasInvite, aliasExpediteur))){ //Check is cette invitation existe déjà pour ne pas créer de doublon.
+                            serveur.addInvitation(new Invitation(aliasExpediteur, aliasInvite));
+                            aliasInvite =  evenement.getArgument().trim();
+                            cnx = serveur.getConnexionParAlias(aliasInvite);
+                            cnx.envoyer("JOIN " + aliasExpediteur);
+                        }
+
                     }
 
                     break;
@@ -73,7 +81,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
                     serveur.removeInvitation(aliasInvite, aliasExpediteur);
-                    cnx.setAlias(aliasInvite);
+                    cnx =  serveur.getConnexionParAlias(aliasInvite);
                     cnx.envoyer("DECLINE");
                     break;
                 case "PRV":
@@ -86,7 +94,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     serveur.envoyerPrive(msg,aliasExpediteur,aliasInvite);
                     break;
                 case "INV":
-                    cnx.envoyer("INV "+serveur.getListInvitations());
+
+                    cnx.envoyer("INV "+ serveur.listeInvitations(cnx.getAlias()).trim());
                     break;
                 case "QUIT":
 //                    aliasExpediteur = cnx.getAlias();

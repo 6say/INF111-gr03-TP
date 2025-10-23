@@ -31,7 +31,13 @@ public class Invitation {
     }
 
     @Override
+    public String toString() {
+        return aliasHote ;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(aliasHote, aliasInvite);
     }
 }
+
