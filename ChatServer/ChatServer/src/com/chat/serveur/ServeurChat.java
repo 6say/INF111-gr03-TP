@@ -134,13 +134,32 @@ public class ServeurChat extends Serveur {
         }
     }
 
-    public void envoyerPrive(String msg, String aliasExpediteur, String aliasInvite) {
-        String s = "";
-        Connexion cnx = null;
-        if(listSalonPrives.contains(new SalonPrive(aliasExpediteur,aliasInvite))) {
-            cnx.setAlias(aliasInvite);
-            cnx.envoyer(aliasExpediteur + " >> " + msg);
+    public void envoyerPrive(String aliasExpediteur, String aliasInvite) {
+
+        String[] split = aliasInvite.split(" ");
+        String message = aliasExpediteur + " ";
+        for(int i=1;i<split.length;i++){
+            message+=split[i]+" ";
         }
+
+        if(getConnexionParAlias(split[0]) != null){
+            if(listSalonPrives.contains(new SalonPrive(aliasExpediteur,split[0]))){
+                Connexion connexionAliasInvite = getConnexionParAlias(split[0]);
+                connexionAliasInvite.envoyer(message);
+            }
+        }
+
+
+
+        /*
+        Connexion cnx = null;
+
+        if(listSalonPrives.contains(new SalonPrive(aliasExpediteur,aliasInvite))) {
+            cnx = getConnexionParAlias(aliasInvite);
+            cnx.envoyer(split[0] + " >> " + split[1]);
+        }
+
+         */
     }
 
     public void addSalonPrive(SalonPrive salonPrive){

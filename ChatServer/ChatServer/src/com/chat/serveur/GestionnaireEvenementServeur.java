@@ -62,6 +62,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasInvite = evenement.getArgument();
                     if(serveur.getListInvitations().contains(new Invitation(aliasExpediteur, aliasInvite))){
                         serveur.addSalonPrive(new SalonPrive(aliasExpediteur,aliasInvite));
+                        serveur.removeInvitation(aliasExpediteur,aliasInvite);
                         cnx.envoyer("JOINOK " + aliasInvite );
                         cnx = serveur.getConnexionParAlias(aliasInvite);
                         cnx.envoyer("JOINOK " + aliasExpediteur);
@@ -87,11 +88,16 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                 case "PRV":
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
-                    msg = evenement.getArgument();
+                    serveur.envoyerPrive(aliasExpediteur, aliasInvite);
+                   /*
                     if(!serveur.getListSalonPrives().contains(new SalonPrive(aliasExpediteur,aliasInvite)))
                         cnx.envoyer("Vous ne partagez pas un salon privée avec "+aliasInvite);
+                    else{
+                        serveur.envoyerPrive(aliasExpediteur,aliasInvite);
+                    }
 
-                    serveur.envoyerPrive(msg,aliasExpediteur,aliasInvite);
+                    */
+
                     break;
                 case "INV":
 
@@ -108,7 +114,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
                     if(!serveur.quitterSalonPrive(aliasExpediteur, aliasInvite)) {
-                        cnx.envoyer("Le salon n'a pas pu être effacé");
+                        cnx.envoyer("Le salon n'a pas pu etre effacé, car vous n'êtes pas en discution privé ");
                         //serveur.removeSalonPrive(aliasInvite);
                     }
                     cnx.envoyer("QUIT");
