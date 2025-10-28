@@ -11,6 +11,18 @@ public class Invitation {
         this.aliasInvite = aliasInvite;
     }
 
+    public boolean contientAlias(String alias1, String alias2){
+        return aliasHote.equalsIgnoreCase(alias1) && aliasInvite.equalsIgnoreCase(alias2) ;
+    }
+
+    public String getAliasHote() {
+        return aliasHote;
+    }
+
+    public String getAliasInvite() {
+        return aliasInvite;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -19,7 +31,13 @@ public class Invitation {
     }
 
     @Override
+    public String toString() {
+        return aliasHote ;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(aliasHote, aliasInvite);
     }
 }
+

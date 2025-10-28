@@ -19,6 +19,16 @@ public class ServeurChat extends Serveur {
     private Vector<String> historique;
 
     private Vector<Invitation> listInvitations;
+    private Vector<SalonPrive> listSalonPrives;
+
+    public Vector<Invitation> getListInvitations() {
+        return listInvitations;
+    }
+
+
+    public Vector<SalonPrive> getListSalonPrives() {
+        return listSalonPrives;
+    }
 
     /**
      * Cr�e un serveur de chat qui va �couter sur le port sp�cifi�.
@@ -28,6 +38,7 @@ public class ServeurChat extends Serveur {
     public ServeurChat(int port) {
         super(port);
         listInvitations = new Vector<Invitation>();
+        listSalonPrives = new Vector<SalonPrive>();
         historique = new Vector<String>();
     }
 
@@ -108,9 +119,8 @@ public class ServeurChat extends Serveur {
 
     public String historique() {
         String s = "";
-        ListIterator<String> iterateur = historique.listIterator();
-        while(iterateur.hasNext()) {
-            s += iterateur.next() + "\n";
+        for (int i = 0; i < historique.size(); i++){
+            s += historique.elementAt(i) + '\n';
         }
         return s;
     }
@@ -124,27 +134,92 @@ public class ServeurChat extends Serveur {
         }
     }
 
-    public boolean inviter(String invite,String host){
-        boolean canInvite = true;
-        host = host.trim();
-        invite = invite.trim();
-        Invitation inv = new Invitation(host,invite);
-        for (Invitation i:listInvitations){
-            if(inv.equals(i)){
-               canInvite = false;
-               return false;
+    public void envoyerPrive(String aliasExpediteur, String aliasInvite) {
+
+        String[] split = aliasInvite.split(" ");
+        String message = aliasExpediteur + " ";
+        for(int i=1;i<split.length;i++){
+            message+=split[i]+" ";
+        }
+
+        if(getConnexionParAlias(split[0]) != null){
+            if(listSalonPrives.contains(new SalonPrive(aliasExpediteur,split[0]))){
+                Connexion connexionAliasInvite = getConnexionParAlias(split[0]);
+                connexionAliasInvite.envoyer(message);
             }
         }
 
-        if (canInvite){
-            listInvitations.add(inv);
-            for (Connexion cnx:connectes){
-                if(cnx.getAlias().equalsIgnoreCase(invite)){
-                    cnx.envoyer(host + "Vous a inviter a chatter en priver");
-                }
+
+
+        /*
+        Connexion cnx = null;
+
+        if(listSalonPrives.contains(new SalonPrive(aliasExpediteur,aliasInvite))) {
+            cnx = getConnexionParAlias(aliasInvite);
+            cnx.envoyer(split[0] + " >> " + split[1]);
+        }
+
+         */
+    }
+
+    public void addSalonPrive(SalonPrive salonPrive){
+        listSalonPrives.add(salonPrive);
+    }
+    public boolean removeSalonPrive(SalonPrive salonPrive){
+        if(listSalonPrives.contains(salonPrive)) {
+            listSalonPrives.remove(salonPrive);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addInvitation(Invitation invite){
+        if(!listInvitations.contains(invite)) {
+            listInvitations.add(invite);
+            return true;
+        }
+        return false;
+    }
+
+    public void removeInvitation(String alias1, String alias2){
+        listInvitations.remove(new Invitation(alias1, alias2));
+    }
+
+    public Connexion getConnexionParAlias(String alias) {
+        for (Connexion cnx : connectes) {
+            if (cnx.getAlias().equalsIgnoreCase(alias)) {
+                return cnx;
             }
         }
-        return true;
+        return null;
+    }
+    public boolean quitterSalonPrive(String aliasHote,String aliasInvite){
+        boolean quitte = false;
+        SalonPrive quitterSalon = new SalonPrive(aliasHote,aliasInvite); //on crée un salon à effacer
+
+        if(listSalonPrives.remove(quitterSalon)){ // On s'Assure de pouvoir effacer le salon, si oui, on return true
+
+            Connexion cnxInvite= getConnexionParAlias(aliasInvite);
+
+            if(cnxInvite!=null){ //Si on a bel et bien encore un invité de l'autre côté du salon, on lui envoie un message pour dire que l'hôte à quitté
+                cnxInvite.envoyer("QUIT "+ aliasHote);
+            }
+            quitte = true;
+        }
+        return quitte; // Aucun invité n'a été trouvé, on ne peut pas effacer le salon
+    }
+
+    public String listeInvitations(String alias) {
+        String s = "";
+        for (Invitation invitations: listInvitations) {
+            if(invitations.getAliasInvite().equalsIgnoreCase(alias)){
+                s += invitations.getAliasHote() + ":";
+            }
+        }
+        if(s.isEmpty()){
+            s = "Vous Avez Aucune Invitation";
+        }
+        return s;
     }
 
 
