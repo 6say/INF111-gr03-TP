@@ -1,13 +1,12 @@
 package com.atoudeft.tictactoe.classes;
 
 import com.atoudeft.tictactoe.MethodeNonImplementeeException;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import jdk.nashorn.internal.ir.Symbol;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 public final class Plateau {
     private final Symbole[][] grille = new Symbole[3][3];
     private int casesRemplies = 0;
@@ -56,5 +55,22 @@ public final class Plateau {
             }
         }
         return Collections.emptyList(); //On retourne une liste vide vu qu'ucune position n'est gagnante (code que vous avez donné dans la question 4.4)
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder plateau = new StringBuilder();
+
+        for (int i = 0; i < 3; i++) {
+        //On parcours chaque ligne du plateau
+            for (int j = 0; j < 3; j++) {
+            // On parcours chaque collone du plateau
+                plateau.append(grille[i][j] == null ? "." : grille[i][j]); //On récupère le symbole qui est placé à l'endroit du tableau sur le plateau. Sinon, on ajoute un point
+            }
+            if(i<2){
+                plateau.append("\n"); //On fait un saut de ligne à chaque incrémentation de ligne.
+            }
+        }
+        return plateau.toString();
     }
 }
