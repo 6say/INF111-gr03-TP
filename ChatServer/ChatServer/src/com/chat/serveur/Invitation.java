@@ -18,7 +18,6 @@ public class Invitation {
     public String getAliasHote() {
         return aliasHote;
     }
-
     public String getAliasInvite() {
         return aliasInvite;
     }
