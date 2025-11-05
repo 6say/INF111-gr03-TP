@@ -183,6 +183,7 @@ public class ServeurChat extends Serveur {
 
     public void removeInvitation(String alias1, String alias2){
         listInvitations.remove(new Invitation(alias1, alias2));
+        listInvitations.remove(new Invitation(alias2,alias1));
     }
 
     public Connexion getConnexionParAlias(String alias) {

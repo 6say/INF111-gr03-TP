@@ -7,8 +7,12 @@ public class Invitation {
     private String aliasInvite; //test
 
     public Invitation(String aliasHote, String aliasInvite) {
-        this.aliasHote = aliasHote;
-        this.aliasInvite = aliasInvite;
+            this.aliasHote = aliasHote;
+            this.aliasInvite = aliasInvite;
+    }
+
+    public Invitation(String aliasHote){
+        this(aliasHote,null);
     }
 
     public boolean contientAlias(String alias1, String alias2){
@@ -18,7 +22,6 @@ public class Invitation {
     public String getAliasHote() {
         return aliasHote;
     }
-
     public String getAliasInvite() {
         return aliasInvite;
     }
