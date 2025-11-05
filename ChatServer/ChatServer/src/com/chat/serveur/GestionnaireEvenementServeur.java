@@ -54,53 +54,53 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                 case "MSG":
                     aliasExpediteur = cnx.getAlias();
                     msg = evenement.getArgument();
-                    serveur.envoyerATousSauf(msg, aliasExpediteur);
-                    serveur.ajouterHistorique(msg,aliasExpediteur);
+                    if(!msg.isEmpty()) {
+                        serveur.envoyerATousSauf(msg, aliasExpediteur);
+                        serveur.ajouterHistorique(msg, aliasExpediteur);
+                    }
                     break;
                 case "JOIN":
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
 
-                    /*******BUG: Je pense qu'il y a un problème à cette ligne car aprés avoir decliner une invitation, on peut toujours join.*******
-                     *
-                     * Source potentiel:
-                     * 1.   on utilise if(invitaition n'existe pas) then cree un inviation,
-                     *      alors qu'on verifie si (invitation existe) pour creer une inviation
-                     *      resultat: l'invitation existe toujours --> donc dés qu'elle est creer
-                     *      Aussi i y'a une duplication de la verification (invitation existe)
-                     *
-                 *      2.  (plus simple) l'invitation n'est jamais vraiment supprimée
-                     *      Solution: Corriger le removeInvitation() pour supprimer l'objet
-                     */
-                    if(serveur.getListInvitations().contains(new Invitation(aliasExpediteur, aliasInvite))){
-                        serveur.addSalonPrive(new SalonPrive(aliasExpediteur,aliasInvite));
-                        serveur.removeInvitation(aliasExpediteur,aliasInvite);
-                        cnx.envoyer("JOINOK " + aliasInvite );
-                        cnx = serveur.getConnexionParAlias(aliasInvite);
-                        cnx.envoyer("JOINOK " + aliasExpediteur);
-                    }else{
-                        if(!serveur.getListInvitations().contains(new Invitation(aliasInvite, aliasExpediteur))){ //Check is cette invitation existe déjà pour ne pas créer de doublon.
-                            serveur.addInvitation(new Invitation(aliasExpediteur, aliasInvite));
-                            aliasInvite =  evenement.getArgument().trim();
-                            cnx = serveur.getConnexionParAlias(aliasInvite);
-                            cnx.envoyer("JOIN " + aliasExpediteur);
-                        }
+                    if(!aliasInvite.isEmpty()) {
 
+
+                        if (serveur.getListInvitations().contains(new Invitation(aliasExpediteur, aliasInvite))) {
+                            serveur.addSalonPrive(new SalonPrive(aliasExpediteur, aliasInvite));
+                            serveur.removeInvitation(aliasExpediteur, aliasInvite);
+                            cnx.envoyer("JOINOK " + aliasInvite);
+                            cnx = serveur.getConnexionParAlias(aliasInvite);
+                            cnx.envoyer("JOINOK " + aliasExpediteur);
+                        } else {
+                            if (!serveur.getListInvitations().contains(new Invitation(aliasInvite, aliasExpediteur))) { //Check is cette invitation existe déjà pour ne pas créer de doublon.
+                                serveur.addInvitation(new Invitation(aliasExpediteur, aliasInvite));
+                                aliasInvite = evenement.getArgument().trim();
+                                cnx = serveur.getConnexionParAlias(aliasInvite);
+                                cnx.envoyer("JOIN " + aliasExpediteur);
+                            }
+                        }
                     }
+
 
                     break;
                 //Ajoutez ici deautres case pour gerer deautres commandes.
                 case "DECLINE":
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
-                    serveur.removeInvitation(aliasInvite, aliasExpediteur);
-                    cnx =  serveur.getConnexionParAlias(aliasInvite);
-                    cnx.envoyer("DECLINE ");
+                    if (!aliasInvite.isEmpty()) {
+                        serveur.removeInvitation(aliasInvite, aliasExpediteur);
+                        cnx = serveur.getConnexionParAlias(aliasInvite);
+                        cnx.envoyer("DECLINE " + aliasExpediteur);
+                    }
                     break;
                 case "PRV":
+
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
-                    serveur.envoyerPrive(aliasExpediteur, aliasInvite);
+                    if(!aliasInvite.isEmpty()) {
+                        serveur.envoyerPrive(aliasExpediteur, aliasInvite);
+                    }
                    /*
                     if(!serveur.getListSalonPrives().contains(new SalonPrive(aliasExpediteur,aliasInvite)))
                         cnx.envoyer("Vous ne partagez pas un salon privée avec "+aliasInvite);
@@ -112,7 +112,6 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                     break;
                 case "INV":
-
                     cnx.envoyer("INV "+ serveur.listeInvitations(cnx.getAlias()).trim());
                     break;
                 case "QUIT":
@@ -125,11 +124,13 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 //                    cnx.envoyer("QUIT : +\n +  Vous avez bien quitté le salon privé");
                     aliasExpediteur = cnx.getAlias();
                     aliasInvite = evenement.getArgument();
-                    if(!serveur.quitterSalonPrive(aliasExpediteur, aliasInvite)) {
-                        cnx.envoyer("Le salon n'a pas pu etre effacé, car vous n'êtes pas en discution privé ");
-                        //serveur.removeSalonPrive(aliasInvite);
+                    if(!aliasInvite.isEmpty()) {
+                        if (!serveur.quitterSalonPrive(aliasExpediteur, aliasInvite)) {
+                            cnx.envoyer("Le salon n'a pas pu etre effacé, car vous n'êtes pas en discution privé ");
+                            //serveur.removeSalonPrive(aliasInvite);
+                        }
+                        cnx.envoyer("QUIT " + aliasExpediteur);
                     }
-                    cnx.envoyer("QUIT ");
                     break;
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
