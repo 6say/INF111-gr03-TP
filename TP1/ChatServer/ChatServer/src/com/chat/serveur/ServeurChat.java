@@ -82,7 +82,7 @@ public class ServeurChat extends Serveur {
         }
         if (!res)
             return false;
-        for (Connexion cnx:connectes) {
+        for (Connexion cnx:connectes) { // recommandee d'utiliser le for classique, car pendant l'iteration du for each il peut y avoir une nouvelle connexion(est manipuler en parallele), ca peut causer le for each de planter 
             if (aliasFourni.equalsIgnoreCase(cnx.getAlias())) { //alias d�j� utilis�
                 res = false;
                 break;
@@ -149,17 +149,6 @@ public class ServeurChat extends Serveur {
             }
         }
 
-
-
-        /*
-        Connexion cnx = null;
-
-        if(listSalonPrives.contains(new SalonPrive(aliasExpediteur,aliasInvite))) {
-            cnx = getConnexionParAlias(aliasInvite);
-            cnx.envoyer(split[0] + " >> " + split[1]);
-        }
-
-         */
     }
 
     public void addSalonPrive(SalonPrive salonPrive){
@@ -218,7 +207,8 @@ public class ServeurChat extends Serveur {
             }
         }
         if(s.isEmpty()){
-            s = "Vous Avez Aucune Invitation";
+            // envoyer une chaine vide, pour qu'il ne soit pas traiter comme un alias
+            s = ""; 
         }
         return s;
     }

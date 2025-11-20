@@ -75,7 +75,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         } else {
                             if (!serveur.getListInvitations().contains(new Invitation(aliasInvite, aliasExpediteur))) { //Check is cette invitation existe déjà pour ne pas créer de doublon.
                                 serveur.addInvitation(new Invitation(aliasExpediteur, aliasInvite));
-                                aliasInvite = evenement.getArgument().trim();
+                                aliasInvite = evenement.getArgument().trim(); //le trim aurait pu etre a la ligne 64
                                 cnx = serveur.getConnexionParAlias(aliasInvite);
                                 cnx.envoyer("JOIN " + aliasExpediteur);
                             }
