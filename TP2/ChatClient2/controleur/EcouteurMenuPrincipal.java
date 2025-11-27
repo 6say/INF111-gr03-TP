@@ -17,6 +17,7 @@ public class EcouteurMenuPrincipal implements ActionListener {
     private ClientChat clientChat;
     private JFrame fenetre;
 
+
     public EcouteurMenuPrincipal(ClientChat clientChat, JFrame fenetre) {
         this.clientChat = clientChat;
         this.fenetre = fenetre;
@@ -34,12 +35,14 @@ public class EcouteurMenuPrincipal implements ActionListener {
 
             switch (action) {
                 case "CONNECTER":
+
                     if (!clientChat.isConnecte()) {
                         if (!clientChat.connecter())
                             JOptionPane.showMessageDialog(fenetre,"Le serveur ne répond pas");
                     }
                     break;
                 case "DECONNECTER":
+
                     if (!clientChat.isConnecte())
                         break;
                     res = JOptionPane.showConfirmDialog(fenetre, "Vous allez vous déconnecter",
