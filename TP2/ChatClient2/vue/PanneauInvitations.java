@@ -53,6 +53,7 @@ public class PanneauInvitations extends JPanel {
         invitationsRecues.addElement(alias);
     }
     public void retirerInvitationRecue(String alias) {
+        System.out.println(alias);
         invitationsRecues.removeElement(alias);
     }
     public List<String> getElementsSelectionnes() {

@@ -14,12 +14,8 @@ public class PanneauChat extends JPanel {
     protected JTextArea zoneChat;
     protected JTextField champDeSaisie;
     protected JScrollPane scroll;
+    protected JPanel priver = new JPanel();
 
-    private int tailleHorizontalChampSaisie = 270;
-    private int tailleVerticalChampSaisie = 30;
-
-    private int tailleBoiteChatX = 270;
-    private int tailleBoiteChatY = 550;
 
     public PanneauChat() {
         initialiserComponent();
@@ -27,9 +23,10 @@ public class PanneauChat extends JPanel {
     }
 
     public void initialiserComponent(){
+        this.setLayout(new BorderLayout());
+        this.add(priver,BorderLayout.NORTH);
         champDeSaisie = new JTextField();
         champDeSaisie.setEnabled(true);
-        champDeSaisie.setPreferredSize(new Dimension(tailleHorizontalChampSaisie,tailleVerticalChampSaisie));
 
 
         zoneChat = new JTextArea();
@@ -37,14 +34,12 @@ public class PanneauChat extends JPanel {
         scroll = new JScrollPane(zoneChat,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVisible(true);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll.setPreferredSize(new Dimension(tailleBoiteChatX,tailleBoiteChatY));
         this.add(scroll, BorderLayout.CENTER);
         this.add(champDeSaisie, BorderLayout.SOUTH);
     }
 
     public void ajouter(String msg) {
         zoneChat.append("\n"+msg);
-
     }
 
     public void setEcouteur(ActionListener ecouteur) {
