@@ -3,6 +3,7 @@ package controleur;
 import com.chat.client.ClientChat;
 import vue.PanneauChat;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,5 +24,14 @@ public class EcouteurChatPublic implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evt) {
         //à compléter
+        Object source = evt.getSource();
+        if(source instanceof JTextField){
+            String message = ((JTextField) source).getText();
+            if(!message.isEmpty()){
+                clientChat.envoyer("MSG " + message);
+                panneauChat.ajouter("MOI>>" + message);
+                ((JTextField) source).setText("");
+            }
+        }
     }
 }

@@ -47,6 +47,8 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     panneauPrincipal.setVisible(false);
                     System.out.println("Vider panneau principal");
                     panneauPrincipal.vider();
+                    fenetre = (MainFrame) panneauPrincipal.getTopLevelAncestor();
+                    fenetre.seMettreAJour(client);
                     break;
                 case "WAIT_FOR": //Le serveur demande de choisir un alias
                     boolean termine = false;
@@ -58,6 +60,7 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                                 client.envoyer(alias);
                                 client.setAlias(alias);
                                 termine = true;
+                                fenetre.seMettreAJour(client);
                             }
                         } else {
                             client.deconnecter();

@@ -56,6 +56,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
     /******************* COMMANDES GÉNÉRALES *******************/
                 case "EXIT": //Ferme la connexion avec le client qui a envoyé "EXIT":
                     cnx.envoyer("END");
+                    System.out.println("on est ici");
                     aliasExpediteur = cnx.getAlias();
                     serveurChat.envoyerATousSauf("EXIT "+aliasExpediteur, aliasExpediteur);
                     serveurChat.enlever(cnx);

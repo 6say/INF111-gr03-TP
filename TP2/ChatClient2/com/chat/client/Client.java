@@ -12,9 +12,9 @@ import com.chat.commun.thread.ThreadEcouteurDeTexte;
 import observer.Observable;
 
 /**
- * Cette classe représente un client capable de se connecter à un serveur.
+ * Cette classe reprï¿½sente un client capable de se connecter ï¿½ un serveur.
  *
- * @author Abdelmoumène Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
+ * @author Abdelmoumï¿½ne Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
  * @version 1.0
  * @since 2023-09-01
  */
@@ -32,12 +32,12 @@ public class Client extends Observable implements Lecteur {
     }
 
     /**
-     * Connecte le client au serveur en utilisant un socket. Si la connexion réussit, un objet
-     * Connexion est créé qui crée les flux d'entrée/sortie permettant de communiquer du texte
+     * Connecte le client au serveur en utilisant un socket. Si la connexion rï¿½ussit, un objet
+     * Connexion est crï¿½ï¿½ qui crï¿½e les flux d'entrï¿½e/sortie permettant de communiquer du texte
      * avec le serveur.
      *
-     * @return boolean true, si la connexion a réussi. false, si la connexion échoue
-     * ou si le client était déjà connecté.
+     * @return boolean true, si la connexion a rï¿½ussi. false, si la connexion ï¿½choue
+     * ou si le client ï¿½tait dï¿½jï¿½ connectï¿½.
      */
     public boolean connecter() {
         boolean resultat = false;
@@ -53,7 +53,7 @@ public class Client extends Observable implements Lecteur {
             //On cree l'ecouteur d'evenements pour le client :
             //gestionnaireEvenementClient = new GestionnaireEvenementClient(this); //On utilise maintenant un GestionnaireEvenementClient2
 
-            //Démarrer le thread inspecteur de texte:
+            //Dï¿½marrer le thread inspecteur de texte:
             vt = new ThreadEcouteurDeTexte(this);
             vt.start();  //la methode run() de l'ecouteur de texte s'execute en parallele avec le reste du programme.
             resultat = true;
@@ -65,27 +65,27 @@ public class Client extends Observable implements Lecteur {
     }
 
     /**
-     * Déconnecte le client, s'il est connecté, en fermant l'objet Connexion. Le texte "exit" est envoyé au serveur
-     * pour l'informer de la déconnexion. Le thread écouteur de texte est arrêté.
+     * Dï¿½connecte le client, s'il est connectï¿½, en fermant l'objet Connexion. Le texte "exit" est envoyï¿½ au serveur
+     * pour l'informer de la dï¿½connexion. Le thread ï¿½couteur de texte est arrï¿½tï¿½.
      *
-     * @return boolean true, si le client s'est déconnecté, false, s'il était déjà déconnecté
+     * @return boolean true, si le client s'est dï¿½connectï¿½, false, s'il ï¿½tait dï¿½jï¿½ dï¿½connectï¿½
      */
     public boolean deconnecter() {
         if (!isConnecte())
             return false;
 
         connexion.envoyer("EXIT");
-        connexion.close();
-        if (vt != null)
-            vt.interrupt();
+       // connexion.close();
+        //if (vt != null)
+          //  vt.interrupt();
         this.setConnecte(false);
         return true;
     }
     /**
-     * Cette méthode vérifie s'il y a du texte qui arrive sur la connexion du client et, si c'est le cas, elle crée
-     * un événement contenant les données du texte et demande au gestionnaire d'événement client de traiter l'événement.
+     * Cette mï¿½thode vï¿½rifie s'il y a du texte qui arrive sur la connexion du client et, si c'est le cas, elle crï¿½e
+     * un ï¿½vï¿½nement contenant les donnï¿½es du texte et demande au gestionnaire d'ï¿½vï¿½nement client de traiter l'ï¿½vï¿½nement.
      *
-     * @author Abdelmoumène Toudeft
+     * @author Abdelmoumï¿½ne Toudeft
      * @version 1.0
      * @since   2023-09-20
      */
@@ -102,10 +102,10 @@ public class Client extends Observable implements Lecteur {
         }
     }
     /**
-     * Cette méthode retourne l'adresse IP du serveur sur lequel ce client se connecte.
+     * Cette mï¿½thode retourne l'adresse IP du serveur sur lequel ce client se connecte.
      *
      * @return String l'adresse IP du serveur dans le format "192.168.25.32"
-     * @author Abdelmoumène Toudeft
+     * @author Abdelmoumï¿½ne Toudeft
      * @version 1.0
      * @since   2023-09-20
      */
@@ -116,36 +116,36 @@ public class Client extends Observable implements Lecteur {
         this.adrServeur = adrServeur;
     }
     /**
-     * Indique si le client est connecté à un serveur..
+     * Indique si le client est connectï¿½ ï¿½ un serveur..
      *
-     * @return boolean true si le client est connecté et false sinon
+     * @return boolean true si le client est connectï¿½ et false sinon
      */
     public boolean isConnecte() {
         return connecte;
     }
 
     /**
-     * Marque ce client comme étant connecté ou déconnecté.
+     * Marque ce client comme ï¿½tant connectï¿½ ou dï¿½connectï¿½.
      *
-     * @param connecte boolean Si true, marque le client comme étant connecté, si false, le marque comme déconnecté
+     * @param connecte boolean Si true, marque le client comme ï¿½tant connectï¿½, si false, le marque comme dï¿½connectï¿½
      */
     public void setConnecte(boolean connecte) {
         this.connecte = connecte;
     }
 
     /**
-     * Retourne le port d'écoute du serveur auquel ce client se connecte.
+     * Retourne le port d'ï¿½coute du serveur auquel ce client se connecte.
      *
-     * @return int Port d'écoute du serveur
+     * @return int Port d'ï¿½coute du serveur
      */
     public int getPortServeur() {
         return portServeur;
     }
 
     /**
-     * Spécifie le port d'écoute du serveur sur lequel ce client se connecte.
+     * Spï¿½cifie le port d'ï¿½coute du serveur sur lequel ce client se connecte.
      *
-     * @param portServeur int Port d'écoute du serveur
+     * @param portServeur int Port d'ï¿½coute du serveur
      */
     public void setPortServeur(int portServeur) {
         this.portServeur = portServeur;
@@ -154,7 +154,7 @@ public class Client extends Observable implements Lecteur {
     /**
      * Envoie un texte au serveur en utilisant un objet Connexion.
      *
-     * @param s String texte à envoyer
+     * @param s String texte ï¿½ envoyer
      */
     public void envoyer(String s) {
         this.connexion.envoyer(s);
