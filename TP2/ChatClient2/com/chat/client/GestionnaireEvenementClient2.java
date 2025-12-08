@@ -8,6 +8,7 @@ import com.chat.programme.MainFrame;
 import vue.FenetreTicTacToe;
 import vue.PanneauPrincipal;
 import vue.PanneauTicTacToe;
+import controleur.EcouteurTicTacToe;
 
 import javax.swing.*;
 
@@ -154,7 +155,12 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     System.out.println("Partie d'échecs démarrée avec "+arg+". Votre couleur est : "+str);
                     System.out.println(client.getEtatPartieTicTacToe());
                     PanneauTicTacToe panneauTicTacToe = new PanneauTicTacToe(client.getEtatPartieTicTacToe());
-                    //à compléter
+
+                    EcouteurTicTacToe ecouteur = new EcouteurTicTacToe(client, str);
+                    panneauTicTacToe.setEcouteurTicTacToe(ecouteur); //On crée un écoutreur avec le client et le symbole du client
+
+                    fenetreTicTacToe = new FenetreTicTacToe(panneauTicTacToe, "Vous (" + str + ") contre " + arg);//On crée la fenêtre où on indique contre qui le client joue
+                    fenetreTicTacToe.setVisible(true);
 
                     panneauPrincipal.setFenetreTicTacToe(arg,fenetreTicTacToe);
                     break;
@@ -171,6 +177,18 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     }
                     break;
                 case "TTT_END": //partie terminée
+                    arg = evenement.getArgument();
+                    fenetreTicTacToe = panneauPrincipal.getFenetreTicTacToe();
+                    //Une fois que la partie est gagnée, on ferme la fenêtre tiktactoe et on affiche la victoire avec un message
+                    if(fenetreTicTacToe !=null){
+                        JOptionPane.showMessageDialog(fenetreTicTacToe, "Partie terminée : "+ arg);
+                        fenetreTicTacToe.dispose();
+                    }
+
+                    if(client instanceof ClientChat){
+                        ((ClientChat)client).setEtatPartieTicTacToe(null);
+                    }
+                    //On remet l'état de la partie à null pour pouvoir refaire des parties
                     break;
                 case "ABANDON":
                     arg = evenement.getArgument();
