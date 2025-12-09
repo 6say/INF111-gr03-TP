@@ -206,6 +206,16 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                 break;
                             }
                             //Le coup est valide.
+                            System.out.println(partie);
+                            cnx.envoyer("COUP " + str);
+                            cnx2.envoyer("COUP " + str);
+
+                            try{
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            } //J'ai du mettre le thread en attente parce que sinon les statuts de parties n'étaient pas bien enregistrées quand on joue le dernier coup
+
                             if (!partie.isPartieEnCours()) {//Partie terminee
                                 statut = partie.getStatut();
                                 if (statut==StatutPartie.NULLE) { //partie nulle
@@ -223,11 +233,6 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                         cnx2.envoyer("TTT_END "+sp.getInvite()+" a gagne");
                                     }
                                 }
-                            }
-                            else { //Coup valide
-                                System.out.println(partie);
-                                cnx.envoyer("COUP " + str);
-                                cnx2.envoyer("COUP " + str);
                             }
                         }
                     }
