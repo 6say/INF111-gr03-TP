@@ -163,6 +163,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                 cnx.envoyer("TTTOK "+aliasDestinataire+" "+sp.getSymbole(aliasExpediteur));
                                 cnx2.envoyer("TTTOK "+aliasExpediteur+" "+sp.getSymbole(aliasDestinataire));
                                 sp.supprimeInvitationATicTacToe();
+
                             }
                             else {
                                 cnx2.envoyer("TTT "+aliasExpediteur);
@@ -227,10 +228,16 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                     if (statut == StatutPartie.X_GAGNE) { //l'hote a gagné
                                         cnx.envoyer("TTT_END "+sp.getHote()+" a gagne");
                                         cnx2.envoyer("TTT_END "+sp.getHote()+" a gagne");
+                                        if (sp!= null){
+                                            sp.setPartie(null);
+                                        }
                                     }
                                     else { //L'invite a gagné
                                         cnx.envoyer("TTT_END "+sp.getInvite()+" a gagne");
                                         cnx2.envoyer("TTT_END "+sp.getInvite()+" a gagne");
+                                        if(sp!= null){
+                                            sp.setPartie(null);
+                                        }
                                     }
                                 }
                             }

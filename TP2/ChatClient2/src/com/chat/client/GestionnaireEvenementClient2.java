@@ -186,11 +186,15 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     if(fenetreTicTacToe !=null){
                         JOptionPane.showMessageDialog(fenetreTicTacToe, "Partie terminée : "+ arg);
                         fenetreTicTacToe.dispose();
+                        String[] aliasX = arg.split(" ");
+                        panneauPrincipal.annuleInviteTicTacToe(aliasX[0]);
                     }
+
 
                     if(client instanceof ClientChat){
                         ((ClientChat)client).setEtatPartieTicTacToe(null);
                     }
+
                     //On remet l'état de la partie à null pour pouvoir refaire des parties
                     break;
                 case "ABANDON":
