@@ -64,6 +64,9 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                                 fenetre.seMettreAJour(client);
                             }
                         } else {
+                            if(alias == null){      //Si la personne change d'idee et ne veut pas se connecter
+                                client.setConnecte(false);
+                            }
                             client.deconnecter();
                             termine = true;
                         }
