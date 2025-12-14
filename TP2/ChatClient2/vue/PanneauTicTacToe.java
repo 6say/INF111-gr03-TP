@@ -29,7 +29,7 @@ public class PanneauTicTacToe extends JPanel implements Observateur {
                     boutons[i][j].setIcon(ServiceImages.getIconePourSymbole(etatPlateau[i][j]));
             }
         //Connecter l'observateur sur l'observable :
-        partie.ajouterObservateur(this);
+        this.partie.ajouterObservateur(this);
     }
     public void setEcouteurTicTacToe(ActionListener ecouteurTicTacToe) {
         this.ecouteurTicTacToe = ecouteurTicTacToe;
@@ -41,7 +41,7 @@ public class PanneauTicTacToe extends JPanel implements Observateur {
 
     @Override
     public void seMettreAJour(Observable observable) {
-        //On regade si jamais le symbole correspondant à une case n'est pas le '.', qui signifie que c'est une case vide. Sinon, on change le symbole de la case sur laquelle le coup a été joué
+        //On regarde si jamais le symbole correspondant à une case n'est pas le '.', qui signifie que c'est une case vide. Sinon, on change le symbole de la case sur laquelle le coup a été joué
         if (observable instanceof EtatPartieTicTacToe) {
             char[][] etat = ((EtatPartieTicTacToe) observable).getEtatPlateau();
 

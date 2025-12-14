@@ -163,6 +163,8 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     fenetreTicTacToe.setVisible(true);
 
                     panneauPrincipal.setFenetreTicTacToe(arg,fenetreTicTacToe);
+                    //On ajoute cette ligne pour faire en sorte que les boutons accepter et refuser soient "remis à 0" et qu'on retombe sur le bouton inviter TTT.
+                    panneauPrincipal.annuleInviteTicTacToe(arg);
                     break;
                 case "INVALID":
                     System.out.println(evenement.getArgument());
@@ -193,11 +195,13 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                 case "ABANDON":
                     arg = evenement.getArgument();
                     fenetre = (MainFrame)panneauPrincipal.getTopLevelAncestor();
-                    JOptionPane.showMessageDialog(fenetre,arg+" a abandonné la partie d'échecs");
+                    JOptionPane.showMessageDialog(fenetre,arg+" a abandonné la partie");
                     System.out.println(evenement.getArgument());
                     ((ClientChat)client).setEtatPartieTicTacToe(null);
-                    //On détruit la fenêtre de jeu d'échecs :
+                    //On détruit la fenêtre de jeu :
                     panneauPrincipal.setFenetreTicTacToe(arg,null);
+                    fenetreTicTacToe = panneauPrincipal.getFenetreTicTacToe();
+                    fenetreTicTacToe.dispose();
                     break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default:
