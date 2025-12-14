@@ -204,6 +204,8 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     System.out.println(evenement.getArgument());
                     ((ClientChat)client).setEtatPartieTicTacToe(null);
                     //On détruit la fenêtre de jeu d'échecs :
+                    fenetreTicTacToe = panneauPrincipal.getFenetreTicTacToe();
+                    fenetreTicTacToe.dispose();
                     panneauPrincipal.setFenetreTicTacToe(arg,null);
                     break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/

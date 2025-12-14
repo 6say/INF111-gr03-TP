@@ -49,6 +49,15 @@ public class EcouteurMenuPrincipal implements ActionListener {
                             "Confirmation Déconnecter",
                             JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
                     if (res == JOptionPane.OK_OPTION){
+                        if (clientChat.getEtatPartieTicTacToe() != null){
+                            clientChat.setEtatPartieTicTacToe(null);
+                            clientChat.envoyer("ABANDON");
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         clientChat.deconnecter();
                     }
                     break;
