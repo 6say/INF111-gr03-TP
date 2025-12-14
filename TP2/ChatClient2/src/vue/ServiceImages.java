@@ -2,6 +2,8 @@ package vue;
 
 
 import javax.swing.*;
+import java.awt.*;
+
 /**
  *
  * @author Abdelmoumène Toudeft (Abdelmoumene.Toudeft@etsmtl.ca)
@@ -31,9 +33,9 @@ public class ServiceImages {
 		System.out.println("Nom fichier de l'image : "+nomFichier);
 		if (nomFichier==null)
 			return null;
-		return new ImageIcon("imgs/"+nomFichier);
+		return new ImageIcon("TP2/ChatClient2/src/imgs/"+nomFichier);
 	}
 	public static ImageIcon getImage(String nomFichier) {
-		return new ImageIcon("imgs/"+nomFichier);
+		return new ImageIcon("TP2/ChatClient2/src/imgs/"+nomFichier);
 	}
 }
